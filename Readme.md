@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владислав Козловский](https://up.htmlacademy.ru/javascript/19/user/881967).
-* Наставник: `Неизвестно`.
+* Наставник: [Владислав Кривокора](https://htmlacademy.ru/profile/krivokora).
 
 ---
 
