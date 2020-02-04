@@ -1,9 +1,6 @@
 'use strict';
 
 var amountHero = 8;
-var PIN_WIDTH = 50;
-var PIN_HEIGHT = 70;
-var FILTER_HEIGHT = 46;
 var adTitles = ['1 комнатная квартира', '2х комнатная хата', 'очень большая квартира', 'Очень маленькая квартира', 'Пиздец какая дорогая', 'Элитная квартира', '3х комнатная квартира', '5ти комнатная'];
 var adPrices = [35000, 15000, 45000, 13333, 50000, 70000, 180000, 23000, 123555, 15000, 5555];
 var adTypes = ['palace', 'flat', 'house', 'bungalo'];
@@ -14,6 +11,10 @@ var adCheckouts = ['12:00', '13:00', '14:00'];
 var adFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var adDescriptions = ['Всё ок', 'Очень хорошая квартира', 'Просто нет слов'];
 var adPhotos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+
+const PIN_WIDTH = 50;
+const PIN_HEIGHT = 70;
+const FILTER_HEIGHT = 46;
 
 var mapBlock = document.querySelector('.map');
 var mapPins = document.querySelector('.map__pins');
