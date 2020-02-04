@@ -1,14 +1,13 @@
-'use sctrict;'
+'use strict';
 
 var amountHero = 8;
-var PIN_WIDTH = 50; //ширина маркера
-var PIN_HEIGHT = 70; //высота маркера
-var FILTER_HEIGHT = 46; // высота фильтра
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
+var FILTER_HEIGHT = 46;
 var adTitles = ['1 комнатная квартира', '2х комнатная хата', 'очень большая квартира', 'Очень маленькая квартира', 'Пиздец какая дорогая', 'Элитная квартира', '3х комнатная квартира', '5ти комнатная'];
-var adLocations = [];
 var adPrices = [35000, 15000, 45000, 13333, 50000, 70000, 180000, 23000, 123555, 15000, 5555];
 var adTypes = ['palace', 'flat', 'house', 'bungalo'];
-var adRooms = [1, 2, 3, 4 ,5, 6, 7];
+var adRooms = [1, 2, 3, 4, 5, 6, 7];
 var adGuests = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 var adCheckings = ['12:00', '13:00', '14:00'];
 var adCheckouts = ['12:00', '13:00', '14:00'];
@@ -21,7 +20,7 @@ var mapPins = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var fragment = document.createDocumentFragment();
 
-mapBlock.classList.remove('map--faded'); // Это временное решение, этот класс переключает карту из неактивного состояния в активное
+mapBlock.classList.remove('map--faded');
 
 var getRandomElement = function (arr) {
   var randomElement = arr[Math.floor(Math.random() * arr.length)];
@@ -30,7 +29,7 @@ var getRandomElement = function (arr) {
 
 function getRandomArbitary(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
-};
+}
 
 var generateAds = function () {
   var ad = [];
@@ -42,7 +41,7 @@ var generateAds = function () {
 
       offer: {
         title: getRandomElement(adTitles),
-        address: toString(this.location.x) + toString(this.location.y),
+        address: toString(location.x) + toString(location.y),
         price: getRandomElement(adPrices),
         type: getRandomElement(adTypes),
         rooms: getRandomElement(adRooms),
@@ -59,7 +58,7 @@ var generateAds = function () {
         y: getRandomArbitary(130, mapBlock.clientHeight - PIN_HEIGHT - FILTER_HEIGHT)
       }
     };
-  };
+  }
 
   return ad;
 };
@@ -75,10 +74,10 @@ var renderPins = function (pinAd) {
   return pinElement;
 };
 
-var pins = generateAds(); //Массив объектов объявлений
+var pins = generateAds();
 
 for (var i = 1; i < pins.length; i++) {
   fragment.appendChild(renderPins(pins[i]));
-};
+}
 
 mapPins.appendChild(fragment);
