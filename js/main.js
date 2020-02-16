@@ -1,5 +1,7 @@
 'use strict';
 
+var ENTER_KEY = 'Enter';
+// var ESCAPE_KEY = 'Escape';
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var FILTER_HEIGHT = 46;
@@ -17,8 +19,10 @@ var adDescriptions = ['Всё ок', 'Очень хорошая квартира
 var adPhotos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var mapBlock = document.querySelector('.map');
 var mapPins = document.querySelector('.map__pins');
+var pinCreatAd = document.querySelector('.map__pin--main');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var fragmentPins = document.createDocumentFragment();
+var disalbedElement = ['fieldset', 'select'];
 var houseTypes = {
   palace: 'Дворец',
   flat: 'Квартира',
@@ -26,7 +30,29 @@ var houseTypes = {
   bungalo: 'Бунгало'
 };
 
-mapBlock.classList.remove('map--faded');
+(function () {
+  var formElement = document.querySelectorAll('fieldset');
+  formElement.forEach(function (element) {
+    element.setAttribute('disabled', 'disabled');
+  });
+})();
+
+(function () {
+  var formElement = document.querySelectorAll('select');
+  formElement.forEach(function (element) {
+    element.setAttribute('disabled', 'disabled');
+  });
+})();
+
+var activeForm = function (element) {
+  var createAdForm = document.querySelector('.ad-form');
+  var formElement = document.querySelectorAll(element);
+  formElement.forEach(function (item) {
+    item.removeAttribute('disabled');
+  });
+  createAdForm.classList.remove('ad-form--disabled');
+  mapBlock.classList.remove('map--faded');
+};
 
 var getRandomElement = function (arr) {
   var randomElement = arr[Math.floor(Math.random() * arr.length)];
@@ -146,7 +172,7 @@ var renderCard = function (pinAd) {
   mapPins.appendChild(card);
 };
 
-var renderPins = function (pinAd) {
+var renderPin = function (pinAd) {
   var pinElement = pinTemplate.cloneNode(true);
   pinElement.style.left = pinAd.location.x + 'px';
   pinElement.style.top = pinAd.location.y + 'px';
@@ -157,19 +183,39 @@ var renderPins = function (pinAd) {
 
 var pinsData = generateAds();
 
-(function () {
+var renderPins = function () {
   for (var j = 1; j < pinsData.length; j++) {
-    fragmentPins.appendChild(renderPins(pinsData[j]));
+    fragmentPins.appendChild(renderPin(pinsData[j]));
   }
-})();
+  mapPins.appendChild(fragmentPins);
+};
 
-mapPins.appendChild(fragmentPins);
-
-(function () {
+var renderCards = function () {
   var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
   pins.forEach(function (pin, index) {
     pin.addEventListener('click', function () {
       renderCard(pinsData[index + 1]);
     });
   });
-})();
+};
+
+var activeMap = function () {
+  renderPins();
+  renderCards();
+  activeForm(disalbedElement);
+
+};
+
+pinCreatAd.addEventListener('mousedown', function (evt) {
+  if (evt.which === 1) {
+    activeMap();
+  }
+});
+
+pinCreatAd.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    activeMap();
+  }
+});
+
+
