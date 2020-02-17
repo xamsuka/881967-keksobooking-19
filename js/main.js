@@ -2,9 +2,14 @@
 
 var ENTER_KEY = 'Enter';
 // var ESCAPE_KEY = 'Escape';
+var HALF_PIN_MAIN_WIDTH = 30;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var FILTER_HEIGHT = 46;
+var startPosY = 130;
+var endPosY = 630;
+var startPosX = 0;
+var endPosX = document.querySelector('.map').offsetWidth;
 var amountAd = 8;
 var adTitles = ['1 комнатная квартира', '2х комнатная хата', 'очень большая квартира', 'Очень маленькая квартира', 'Пиздец какая дорогая', 'Элитная квартира', '3х комнатная квартира', '5ти комнатная'];
 var adAddresses = ['Мира, 10', 'Крупской, 5', 'Фрунзе, 14', 'Красная, 15б'];
@@ -42,6 +47,11 @@ var houseTypes = {
   formElement.forEach(function (element) {
     element.setAttribute('disabled', 'disabled');
   });
+})();
+
+(function () {
+  var inputAddress = document.querySelector('#address');
+  inputAddress.value = 'Y: ' + pinCreatAd.style.left + ' X: ' + pinCreatAd.style.top;
 })();
 
 var activeForm = function (element) {
@@ -207,9 +217,42 @@ var activeMap = function () {
 };
 
 pinCreatAd.addEventListener('mousedown', function (evt) {
+  var inputAddress = document.querySelector('#address');
   if (evt.which === 1) {
     activeMap();
   }
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+    var coordY = pinCreatAd.offsetTop - shift.y;
+    var coordX = pinCreatAd.offsetLeft - shift.x;
+    if ((coordY > startPosY && coordY < endPosY) && (coordX > startPosX - HALF_PIN_MAIN_WIDTH && coordX < endPosX - HALF_PIN_MAIN_WIDTH)) {
+      pinCreatAd.style.top = coordY + 'px';
+      pinCreatAd.style.left = coordX + 'px';
+    }
+    inputAddress.value = 'Y: ' + coordY + 'px' + ' X: ' + (coordX + HALF_PIN_MAIN_WIDTH) + 'px';
+  };
+
+  var onMouseUp = function () {
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
 
 pinCreatAd.addEventListener('keydown', function (evt) {
@@ -218,4 +261,48 @@ pinCreatAd.addEventListener('keydown', function (evt) {
   }
 });
 
+
+var inputTitleAd = document.querySelector('#title');
+var inputPriceAd = document.querySelector('#price');
+var selectTypeHouse = document.querySelector('#type');
+
+inputTitleAd.addEventListener('invalid', function () {
+  if (inputTitleAd.validity.tooShort) {
+    inputTitleAd.setCustomValidity('Минимальная длина заголовка — 30 символов');
+  } else if (inputTitleAd.validity.toLong) {
+    inputTitleAd.setCustomValidity('Максимальная длина заголовка — 100 символов');
+  } else if (inputTitleAd.validity.valueMissing) {
+    inputTitleAd.setCustomValidity('Обязательное текстовое поле');
+  } else {
+    inputTitleAd.setCustomValidity('');
+  }
+});
+
+inputPriceAd.addEventListener('invalid', function (evt) {
+  var target = evt.target;
+  if (inputPriceAd.validity.rangeUnderflow) {
+    inputPriceAd.setCustomValidity('Минимальная цена за выбранный тип жилья — ' + target.min);
+  } else if (inputPriceAd.validity.rangeOverflow) {
+    inputPriceAd.setCustomValidity('Максимальная цена — 1 000 000 рублей');
+  } else if (inputPriceAd.validity.valueMissing) {
+    inputPriceAd.setCustomValidity('Обязательное поле');
+  } else {
+    inputPriceAd.setCustomValidity('');
+  }
+});
+
+selectTypeHouse.addEventListener('change', function () {
+  var value = selectTypeHouse.options[selectTypeHouse.selectedIndex].value;
+
+  if (value === 'bungalo') {
+    inputPriceAd.setAttribute('min', '0');
+  } else if (value === 'flat') {
+    inputPriceAd.setAttribute('min', '1000');
+  } else if (value === 'house') {
+    inputPriceAd.setAttribute('min', '5000');
+  } else {
+    inputPriceAd.setAttribute('min', '10000');
+  }
+
+});
 
