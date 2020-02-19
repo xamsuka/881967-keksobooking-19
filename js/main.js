@@ -105,11 +105,6 @@ var generateAds = function () {
   return ad;
 };
 
-var closeAdCard = function (evt) {
-  var target = evt.target;
-  target.offsetParent.remove();
-};
-
 var renderFeatures = function (pin, pinFeatures) {
   var popupAdFeatures = pinFeatures.querySelector('.popup__features').children;
   for (var i = 0; i < popupAdFeatures.length; i++) {
@@ -168,8 +163,9 @@ var createCard = function (pinAd) {
 
 var mountedCard = function (card) {
   var popupButtonClose = card.querySelector('.popup__close');
-  popupButtonClose.focus();
-  popupButtonClose.addEventListener('click', closeAdCard);
+  popupButtonClose.addEventListener('click', function () {
+    closeCard();
+  });
 };
 
 var renderCard = function (pinAd) {
@@ -180,6 +176,7 @@ var renderCard = function (pinAd) {
   var card = createCard(pinAd);
   mountedCard(card);
   mapPins.appendChild(card);
+  document.addEventListener('keydown', onCardEscPress);
 };
 
 var renderPin = function (pinAd) {
@@ -213,12 +210,11 @@ var activeMap = function () {
   renderPins();
   renderCards();
   activeForm(disalbedElement);
-
 };
 
 pinCreatAd.addEventListener('mousedown', function (evt) {
   var inputAddress = document.querySelector('#address');
-  if (evt.which === 1) {
+  if (evt.which === 1 && mapBlock.classList.contains('map--faded')) {
     activeMap();
   }
 
@@ -256,11 +252,27 @@ pinCreatAd.addEventListener('mousedown', function (evt) {
 });
 
 pinCreatAd.addEventListener('keydown', function (evt) {
-  if (evt.key === ENTER_KEY) {
+  if (evt.key === ENTER_KEY && mapBlock.classList.contains('map--faded')) {
     activeMap();
   }
 });
 
+var onCardEscPress = function (evt) {
+  if (evt.key === 'Escape') {
+    closeCard();
+  }
+};
+
+var closeCard = function () {
+  var popupModal = document.querySelector('.map__card');
+  if (popupModal) {
+    popupModal.remove();
+  }
+  document.removeEventListener('keydown', onCardEscPress);
+};
+
+
+// Валидация. Выносим в одтельный модуль form.js
 
 var inputTitleAd = document.querySelector('#title');
 var inputPriceAd = document.querySelector('#price');
@@ -293,16 +305,35 @@ inputPriceAd.addEventListener('invalid', function (evt) {
 
 selectTypeHouse.addEventListener('change', function () {
   var value = selectTypeHouse.options[selectTypeHouse.selectedIndex].value;
-
   if (value === 'bungalo') {
     inputPriceAd.setAttribute('min', '0');
+    inputPriceAd.setAttribute('placeholder', '0');
   } else if (value === 'flat') {
     inputPriceAd.setAttribute('min', '1000');
+    inputPriceAd.setAttribute('placeholder', '1000');
   } else if (value === 'house') {
     inputPriceAd.setAttribute('min', '5000');
+    inputPriceAd.setAttribute('placeholder', '5000');
   } else {
     inputPriceAd.setAttribute('min', '10000');
+    inputPriceAd.setAttribute('placeholder', '10000');
   }
 
 });
 
+var fieldSetTime = document.querySelector('.ad-form__element--time');
+
+var onInputTimeChange = function (evt) {
+  var selectTimeIn = document.querySelector('#timein');
+  var selectTimeOut = document.querySelector('#timeout');
+  var selectTimeInValue = selectTimeIn.selectedIndex;
+  var selectTimeOutValue = selectTimeOut.selectedIndex;
+  var target = evt.target;
+  if (target.name === 'timein') {
+    selectTimeOut.selectedIndex = selectTimeInValue;
+  } else {
+    selectTimeIn.selectedIndex = selectTimeOutValue;
+  }
+};
+
+fieldSetTime.addEventListener('change', onInputTimeChange);
