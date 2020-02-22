@@ -337,3 +337,12 @@ var onInputTimeChange = function (evt) {
 };
 
 fieldSetTime.addEventListener('change', onInputTimeChange);
+/*
+var selectRoomNumber = document.querySelector('#room_number');
+var selectCapacity = document.querySelector('#capacity').options;
+var onInputRoomChange = function () {
+  var selectRoomNumberValue = selectRoomNumber.options[selectRoomNumber.selectedIndex].value;
+};
+
+selectRoomNumber.addEventListener('change', onInputRoomChange);
+*/
