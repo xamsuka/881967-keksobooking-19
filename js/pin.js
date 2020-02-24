@@ -9,22 +9,20 @@
   var mapBlock = document.querySelector('.map');
   var pinCreatAd = document.querySelector('.map__pin--main');
 
-  var disalbedElement = ['fieldset', 'select'];
-
-  var activeForm = function (element) {
+  var activeForm = function () {
     var createAdForm = document.querySelector('.ad-form');
-    var formElement = document.querySelectorAll(element);
-    formElement.forEach(function (item) {
-      item.removeAttribute('disabled');
-    });
     createAdForm.classList.remove('ad-form--disabled');
     mapBlock.classList.remove('map--faded');
+    document.querySelectorAll('form input, form select, form textarea, form button')
+    .forEach(function (elem) {
+      elem.removeAttribute('disabled', 'disabled');
+    });
   };
 
   var activeMap = function () {
     window.map.generateMap();
-    window.map.renderCards();
-    activeForm(disalbedElement);
+    window.card.renderCards();
+    activeForm();
   };
 
   pinCreatAd.addEventListener('mousedown', function (evt) {

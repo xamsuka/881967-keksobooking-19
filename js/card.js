@@ -21,6 +21,7 @@
   var popupAdCheckin = infoAdPopup.querySelector('.popup__text--time');
   var popupAdDescription = infoAdPopup.querySelector('.popup__description');
   var popupAdPhotos = infoAdPopup.querySelector('.popup__photos');
+  var mapPins = document.querySelector('.map__pins');
 
   var renderFeatures = function (pin, pinFeatures) {
     var popupAdFeatures = pinFeatures.querySelector('.popup__features').children;
@@ -64,8 +65,48 @@
     return fragmentCard;
   };
 
+  var onCardEscPress = function (evt) {
+    window.util.isEscPress(evt, closeCard);
+  };
+
+  var closeCard = function () {
+    var popupModal = document.querySelector('.map__card');
+    if (popupModal) {
+      popupModal.remove();
+    }
+    document.removeEventListener('keydown', onCardEscPress);
+  };
+
+  var mountedCard = function (card) {
+    var popupButtonClose = card.querySelector('.popup__close');
+    popupButtonClose.addEventListener('click', function () {
+      closeCard();
+    });
+  };
+
+  var renderCard = function (pinAd) {
+    var popupModal = document.querySelector('.map__card');
+    if (popupModal) {
+      popupModal.remove();
+    }
+    var card = createCard(pinAd);
+    mountedCard(card);
+    mapPins.appendChild(card);
+    document.addEventListener('keydown', onCardEscPress);
+  };
+
+  var renderCards = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    pins.forEach(function (pin, index) {
+      pin.addEventListener('click', function () {
+        renderCard(window.data.generateAd[index + 1]);
+      });
+    });
+  };
+
   window.card = {
-    createCard: createCard
+    createCard: createCard,
+    renderCards: renderCards
   };
 
 })();
