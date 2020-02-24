@@ -1,13 +1,9 @@
 'use strict';
 
 (function () {
-  var formElementSelect = document.querySelectorAll('select');
-  var formElementFieldset = document.querySelectorAll('fieldset');
-  formElementSelect.forEach(function (element) {
-    element.setAttribute('disabled', 'disabled');
-  });
-  formElementFieldset.forEach(function (element) {
-    element.setAttribute('disabled', 'disabled');
+  document.querySelectorAll('form input, form select, form textarea, form button')
+  .forEach(function (elem) {
+    elem.setAttribute('disabled', 'disabled');
   });
 })();
 
