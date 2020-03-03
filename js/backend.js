@@ -45,8 +45,6 @@
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
-        // var buttonBlockError = document.querySelector('.error__button');
-        // buttonBlockError.removeEventListener('click', onClickButtonError);
       } else {
         onError('Произошла ошибка. Код ошибки: ' + xhr.status);
       }
