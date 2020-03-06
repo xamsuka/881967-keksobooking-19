@@ -1,14 +1,6 @@
 'use strict';
 
 (function () {
-
-  var houseTypes = {
-    palace: 'Дворец',
-    flat: 'Квартира',
-    house: 'Дом',
-    bungalo: 'Бунгало'
-  };
-
   var fragmentCard = document.createDocumentFragment();
   var template = document.querySelector('#card').content.querySelector('.map__card');
   var infoAdPopup = template.cloneNode(true);
@@ -53,7 +45,7 @@
     popupAdTitle.textContent = pinAd.offer.title;
     popupAdAdress.textContent = pinAd.offer.address;
     popupAdPrice.textContent = pinAd.offer.price + ' ₽/ночь';
-    popupAdType.textContent = houseTypes[pinAd.offer.type];
+    popupAdType.textContent = window.data.houseMap[pinAd.offer.type].label;
     popupAdCapacity.textContent = pinAd.offer.rooms + ' комнаты для ' + pinAd.offer.guests + ' гостей';
     popupAdCheckin.textContent = 'Заезд после ' + pinAd.offer.checkin + ', выезд до ' + pinAd.offer.checkout;
 
@@ -95,18 +87,18 @@
     document.addEventListener('keydown', onCardEscPress);
   };
 
-  var renderCards = function () {
+  var renderCards = function (ads) {
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin, index) {
       pin.addEventListener('click', function () {
-        renderCard(window.data.generateAd[index + 1]);
+        renderCard(ads[index + 1]);
       });
     });
   };
 
   window.card = {
     createCard: createCard,
-    renderCards: renderCards
+    renderCards: renderCards,
   };
 
 })();

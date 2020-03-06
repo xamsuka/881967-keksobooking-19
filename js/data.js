@@ -18,6 +18,25 @@
   var adPhotos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
   var ad = [];
   var mapBlock = document.querySelector('.map');
+  var houseMap = {
+    palace: {
+      label: 'Дворец',
+      price: '10000'
+    },
+    flat: {
+      label: 'Квартира',
+      price: '1000'
+    },
+    house: {
+      label: 'Дом',
+      price: '5000'
+    },
+    bungalo: {
+      label: 'Бунгало',
+      price: '0'
+    }
+  };
+
   for (var i = 1; i < amountAd + 1; i++) {
     ad[i] = {
       author: {
@@ -46,7 +65,8 @@
   }
 
   window.data = {
-    generateAd: ad
+    generateAd: ad,
+    houseMap: houseMap
   };
 
 })();
