@@ -42,13 +42,13 @@
   var uploadAd = function (data, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
-    xhr.addEventListener('load', function () {
+    xhr.onloadend = function () {
       if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
       } else {
-        onError('Произошла ошибка. Код ошибки: ' + xhr.status);
+        onError('Произошла ошибка отправки объявления. Код ошибки: ' + xhr.status);
       }
-    });
+    };
 
     xhr.open('POST', UrlAddress.URL_UPLOAD_AD);
     xhr.send(data);

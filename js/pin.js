@@ -3,6 +3,8 @@
 (function () {
   var HALF_PIN_MAIN_WIDTH = 30;
   var HALF_PIN_MAIN_HEIGHT = 65;
+  var START_PIN_POS_X = 570;
+  var START_PIN_POS_Y = 375;
   var startPosY = 130;
   var endPosY = 630;
   var startPosX = 0;
@@ -10,11 +12,17 @@
   var mapBlock = document.querySelector('.map');
   var pinCreatAd = document.querySelector('.map__pin--main');
 
+  var setDefaultPosition = function () {
+    pinCreatAd.style.left = START_PIN_POS_X + 'px';
+    pinCreatAd.style.top = START_PIN_POS_Y + 'px';
+  };
+
 
   pinCreatAd.addEventListener('mousedown', function (evt) {
     var inputAddress = document.querySelector('#address');
     if (evt.which === 1 && mapBlock.classList.contains('map--faded')) {
       window.map.activeMap();
+      window.form.statusForm();
     }
 
     var startCoords = {
@@ -55,4 +63,9 @@
   };
 
   pinCreatAd.addEventListener('keydown', onPinActiveMap);
+
+  window.pin = {
+    setDefaultPosition: setDefaultPosition
+  };
+
 })();

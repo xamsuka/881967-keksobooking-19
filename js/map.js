@@ -15,20 +15,13 @@
     window.card.renderCards(ads);
   };
 
-  var onError = function (errorMessage) {
-    var map = document.querySelector('.map');
-    var errorTemplate = document.querySelector('#error').content;
-    var error = errorTemplate.cloneNode(true);
-    var blockErrorMessage = error.querySelector('.error__message');
-    blockErrorMessage.textContent = errorMessage;
-    map.appendChild(error);
-    var buttonError = document.querySelector('.error__button');
+  var onSuccess = function () {
+    window.popup.openPopupModal();
+    window.form.statusForm();
+  };
 
-    buttonError.addEventListener('click', function () {
-      var errorBlock = document.querySelector('.error');
-      errorBlock.remove();
-      activeMap();
-    });
+  var onError = function (errorMessage) {
+    window.popup.openErrorModal(errorMessage);
   };
 
   var createPin = function (pinAd) {
@@ -42,14 +35,11 @@
 
   var activeMap = function () {
     window.backend.loadAds(onGenerateMap, onError);
-    window.form.statusForm();
+    mapBlock.classList.remove('map--faded');
   };
 
   form.addEventListener('submit', function (evt) {
-    window.backend.uploadAd(new FormData(form), function () {
-      mapBlock.classList.add('map--faded');
-      window.form.statusForm();
-    });
+    window.backend.uploadAd(new FormData(form), onSuccess, onError);
     evt.preventDefault();
   });
 

@@ -15,13 +15,14 @@
   var activeForm = function () {
     var formElements = createAdForm.querySelectorAll('form input, form select, form textarea, form button');
     createAdForm.classList.remove('ad-form--disabled');
-    mapBlock.classList.remove('map--faded');
     formElements.forEach(function (elem) {
       elem.removeAttribute('disabled', 'disabled');
     });
   };
 
   var disabledForm = function () {
+    mapBlock.classList.add('map--faded');
+    window.pin.setDefaultPosition();
     var formElements = createAdForm.querySelectorAll('form input, form select, form textarea, form button');
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     createAdForm.classList.add('ad-form--disabled');
