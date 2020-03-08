@@ -10,16 +10,38 @@
 (function () {
   var mapBlock = document.querySelector('.map');
   var pinCreatAd = document.querySelector('.map__pin--main');
+  var createAdForm = document.querySelector('.ad-form');
 
   var activeForm = function () {
-    var createAdForm = document.querySelector('.ad-form');
+    var formElements = createAdForm.querySelectorAll('form input, form select, form textarea, form button');
     createAdForm.classList.remove('ad-form--disabled');
     mapBlock.classList.remove('map--faded');
-    document.querySelectorAll('form input, form select, form textarea, form button')
-    .forEach(function (elem) {
+    formElements.forEach(function (elem) {
       elem.removeAttribute('disabled', 'disabled');
     });
   };
+
+  var disabledForm = function () {
+    var formElements = createAdForm.querySelectorAll('form input, form select, form textarea, form button');
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    createAdForm.classList.add('ad-form--disabled');
+    createAdForm.reset();
+    formElements.forEach(function (elem) {
+      elem.setAttribute('disabled', 'disabled');
+    });
+    pins.forEach(function (pin) {
+      pin.remove();
+    });
+  };
+
+  var statusForm = function () {
+    if (createAdForm.classList.contains('ad-form--disabled')) {
+      activeForm();
+    } else {
+      disabledForm();
+    }
+  };
+
   var changeAddressInput = function () {
     var inputAddress = document.querySelector('#address');
     inputAddress.value = 'Y: ' + pinCreatAd.offsetLeft + ' X: ' + pinCreatAd.offsetLeft;
@@ -37,9 +59,7 @@
   changeValueSelectHouse();
 
   window.form = {
-    activeForm: activeForm,
-    changeAddressInput: changeAddressInput,
-    changeValueSelectHouse: changeValueSelectHouse
+    statusForm: statusForm
   };
 })();
 
@@ -104,7 +124,7 @@
     var optionUnBlock = window.data.getHouseApartments[element];
     selectCapacityOptions.forEach(function (elem) {
       elem.removeAttribute('selected');
-      if (optionUnBlock.indexOf(Number(elem.value)) != -1) {
+      if (optionUnBlock.indexOf(Number(elem.value)) !== -1) {
         elem.disabled = false;
         selectCapacity.selectedIndex = elem.index;
       } else {

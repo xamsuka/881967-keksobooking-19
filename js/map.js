@@ -1,10 +1,12 @@
 'use strict';
 
 (function () {
-
   var mapPins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var fragmentPins = document.createDocumentFragment();
+  var form = document.querySelector('.ad-form');
+  var mapBlock = document.querySelector('.map');
+
   var onGenerateMap = function (ads) {
     for (var j = 1; j < ads.length; j++) {
       fragmentPins.appendChild(createPin(ads[j]));
@@ -40,10 +42,20 @@
 
   var activeMap = function () {
     window.backend.loadAds(onGenerateMap, onError);
-    window.form.activeForm();
+    window.form.statusForm();
   };
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.uploadAd(new FormData(form), function () {
+      mapBlock.classList.add('map--faded');
+      window.form.statusForm();
+    });
+    evt.preventDefault();
+  });
 
   window.map = {
     activeMap: activeMap,
   };
+
+
 })();
