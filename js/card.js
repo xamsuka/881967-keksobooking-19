@@ -45,7 +45,7 @@
     popupAdTitle.textContent = pinAd.offer.title;
     popupAdAdress.textContent = pinAd.offer.address;
     popupAdPrice.textContent = pinAd.offer.price + ' ₽/ночь';
-    popupAdType.textContent = window.data.houseMap[pinAd.offer.type].label;
+    popupAdType.textContent = window.data.getHouseMap[pinAd.offer.type].label;
     popupAdCapacity.textContent = pinAd.offer.rooms + ' комнаты для ' + pinAd.offer.guests + ' гостей';
     popupAdCheckin.textContent = 'Заезд после ' + pinAd.offer.checkin + ', выезд до ' + pinAd.offer.checkout;
 

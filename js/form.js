@@ -29,8 +29,8 @@
     var inputPriceAd = document.querySelector('#price');
     var selectTypeHouse = document.querySelector('#type');
     var value = selectTypeHouse.options[selectTypeHouse.selectedIndex].value;
-    inputPriceAd.setAttribute('min', window.data.houseMap[value].price);
-    inputPriceAd.setAttribute('placeholder', window.data.houseMap[value].price);
+    inputPriceAd.setAttribute('min', window.data.getHouseMap[value].price);
+    inputPriceAd.setAttribute('placeholder', window.data.getHouseMap[value].price);
   };
 
   changeAddressInput();
@@ -47,6 +47,7 @@
   var inputTitleAd = document.querySelector('#title');
   var inputPriceAd = document.querySelector('#price');
   var selectTypeHouse = document.querySelector('#type');
+  var selectApartment = document.querySelector('#room_number');
 
   inputTitleAd.addEventListener('invalid', function () {
     if (inputTitleAd.validity.tooShort) {
@@ -91,4 +92,26 @@
   };
 
   fieldSetTime.addEventListener('change', onInputTimeChange);
+
+  var disabledSelectValue = function (element) {
+    var selectCapacity = document.querySelector('#capacity');
+    var selectCapacityOptions = Array.apply(null, selectCapacity.options);
+    var optionUnBlock = window.data.getHouseApartments[element];
+    selectCapacityOptions.forEach(function (elem) {
+      elem.setAttribute('disabled', 'disabled');
+    });
+
+    optionUnBlock.forEach(function (elementToUnblock) {
+      selectCapacityOptions[elementToUnblock].disabled = false;
+    });
+
+  };
+
+  var onSelectApartmentsChange = function () {
+    var selectApartmentValue = selectApartment.selectedIndex;
+    disabledSelectValue(selectApartmentValue);
+  };
+
+  selectApartment.addEventListener('change', onSelectApartmentsChange);
+
 })();
