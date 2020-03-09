@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var UrlAddress = {
     URL_LOAD_ADS: 'https://js.dump.academy/keksobooking/data',
     URL_UPLOAD_AD: 'https://js.dump.academy/keksobooking'

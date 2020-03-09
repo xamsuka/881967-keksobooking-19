@@ -63,8 +63,10 @@
 
   var closeCard = function () {
     var popupModal = document.querySelector('.map__card');
+    var pinActive = document.querySelector('.map__pin--active');
     if (popupModal) {
       popupModal.remove();
+      pinActive.classList.remove('map__pin--active');
     }
     document.removeEventListener('keydown', onCardEscPress);
   };
@@ -72,6 +74,8 @@
   var mountedCard = function (card) {
     var popupButtonClose = card.querySelector('.popup__close');
     popupButtonClose.addEventListener('click', function () {
+      var pinActive = document.querySelector('.map__pin--active');
+      pinActive.classList.remove('map__pin--active');
       closeCard();
     });
   };
@@ -92,6 +96,7 @@
     pins.forEach(function (pin, index) {
       pin.addEventListener('click', function () {
         renderCard(ads[index + 1]);
+        pin.classList.add('map__pin--active');
       });
     });
   };

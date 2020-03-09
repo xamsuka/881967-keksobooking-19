@@ -1,19 +1,18 @@
 'use strict';
 
 (function () {
+  var pinCreatAd = document.querySelector('.map__pin--main');
+  var createAdForm = document.querySelector('.ad-form');
+  var filterAdForm = document.querySelector('.map__filters');
+
   document.querySelectorAll('form input, form select, form textarea, form button')
   .forEach(function (elem) {
     elem.setAttribute('disabled', 'disabled');
   });
-})();
-
-(function () {
-  var mapBlock = document.querySelector('.map');
-  var pinCreatAd = document.querySelector('.map__pin--main');
-  var createAdForm = document.querySelector('.ad-form');
 
   var activeForm = function () {
-    var formElements = createAdForm.querySelectorAll('form input, form select, form textarea, form button');
+    defaultForm();
+    var formElements = document.querySelectorAll('form input, form select, form textarea, form button');
     createAdForm.classList.remove('ad-form--disabled');
     formElements.forEach(function (elem) {
       elem.removeAttribute('disabled', 'disabled');
@@ -21,17 +20,14 @@
   };
 
   var disabledForm = function () {
-    mapBlock.classList.add('map--faded');
-    window.pin.setDefaultPosition();
-    var formElements = createAdForm.querySelectorAll('form input, form select, form textarea, form button');
-    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var formElements = document.querySelectorAll('form input, form select, form textarea, form button');
     createAdForm.classList.add('ad-form--disabled');
     createAdForm.reset();
+    filterAdForm.reset();
+    window.form.setDefaultForm();
+
     formElements.forEach(function (elem) {
       elem.setAttribute('disabled', 'disabled');
-    });
-    pins.forEach(function (pin) {
-      pin.remove();
     });
   };
 
@@ -56,12 +52,16 @@
     inputPriceAd.setAttribute('placeholder', window.data.getHouseMap[value].price);
   };
 
-  changeAddressInput();
-  changeValueSelectHouse();
+  var defaultForm = function () {
+    changeAddressInput();
+    changeValueSelectHouse();
+  };
 
   window.form = {
-    statusForm: statusForm
+    statusForm: statusForm,
+    setDefaultForm: defaultForm
   };
+
 })();
 
 (function () {

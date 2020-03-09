@@ -2,7 +2,6 @@
 
 (function () {
   var mainBlock = document.querySelector('main');
-  var mapBlock = mainBlock.querySelector('.map');
 
   var onPopupEscPress = function (evt) {
     window.util.isEscPress(evt, closePopup);
@@ -14,14 +13,13 @@
       popupModal.remove();
     }
 
-    document.removeEventListener('keypress', onPopupEscPress);
+    document.removeEventListener('keydown', onPopupEscPress);
   };
 
   var openPopupSuccess = function () {
     var successTemplate = document.querySelector('#success').content;
     var successBlock = successTemplate.cloneNode(true);
     mainBlock.appendChild(successBlock);
-    mapBlock.classList.add('map--faded');
     document.addEventListener('keydown', onPopupEscPress);
   };
 
@@ -36,8 +34,8 @@
     buttonError.addEventListener('click', function () {
       var errorBlock = document.querySelector('.error');
       errorBlock.remove();
-      window.form.statusForm();
     });
+
     document.addEventListener('keydown', onPopupEscPress);
   };
 

@@ -17,12 +17,10 @@
     pinCreatAd.style.top = START_PIN_POS_Y + 'px';
   };
 
-
   pinCreatAd.addEventListener('mousedown', function (evt) {
     var inputAddress = document.querySelector('#address');
     if (evt.which === 1 && mapBlock.classList.contains('map--faded')) {
       window.map.activeMap();
-      window.form.statusForm();
     }
 
     var startCoords = {

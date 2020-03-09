@@ -3,13 +3,16 @@
 (function () {
   var mapPins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var fragmentPins = document.createDocumentFragment();
   var form = document.querySelector('.ad-form');
   var mapBlock = document.querySelector('.map');
 
   var onGenerateMap = function (ads) {
+    var fragmentPins = document.createDocumentFragment();
+
     for (var j = 1; j < ads.length; j++) {
-      fragmentPins.appendChild(createPin(ads[j]));
+      if (ads[j].hasOwnProperty('offer')) {
+        fragmentPins.appendChild(createPin(ads[j]));
+      }
     }
     mapPins.appendChild(fragmentPins);
     window.card.renderCards(ads);
@@ -17,10 +20,11 @@
 
   var onSuccess = function () {
     window.popup.openPopupModal();
-    window.form.statusForm();
+    window.map.disabledMap();
   };
 
   var onError = function (errorMessage) {
+    window.map.disabledMap();
     window.popup.openErrorModal(errorMessage);
   };
 
@@ -36,6 +40,17 @@
   var activeMap = function () {
     window.backend.loadAds(onGenerateMap, onError);
     mapBlock.classList.remove('map--faded');
+    window.form.statusForm();
+  };
+
+  var disabledMap = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    pins.forEach(function (pin) {
+      pin.remove();
+    });
+    window.pin.setDefaultPosition();
+    window.form.statusForm();
+    mapBlock.classList.add('map--faded');
   };
 
   form.addEventListener('submit', function (evt) {
@@ -45,6 +60,7 @@
 
   window.map = {
     activeMap: activeMap,
+    disabledMap: disabledMap
   };
 
 
