@@ -2,6 +2,7 @@
 
 (function () {
   var mainBlock = document.querySelector('main');
+  var mapBlock = mainBlock.querySelector('.map');
 
   var onPopupEscPress = function (evt) {
     window.util.isEscPress(evt, closePopup);
@@ -20,7 +21,7 @@
     var successTemplate = document.querySelector('#success').content;
     var successBlock = successTemplate.cloneNode(true);
     mainBlock.appendChild(successBlock);
-    mainBlock.classList.add('map--faded');
+    mapBlock.classList.add('map--faded');
     document.addEventListener('keydown', onPopupEscPress);
   };
 
