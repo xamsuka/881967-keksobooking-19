@@ -1,25 +1,44 @@
 'use strict';
 
 (function () {
+  var pinCreatAd = document.querySelector('.map__pin--main');
+  var createAdForm = document.querySelector('.ad-form');
+  var filterAdForm = document.querySelector('.map__filters');
+
   document.querySelectorAll('form input, form select, form textarea, form button')
   .forEach(function (elem) {
     elem.setAttribute('disabled', 'disabled');
   });
-})();
-
-(function () {
-  var mapBlock = document.querySelector('.map');
-  var pinCreatAd = document.querySelector('.map__pin--main');
 
   var activeForm = function () {
-    var createAdForm = document.querySelector('.ad-form');
+    defaultForm();
+    var formElements = document.querySelectorAll('form input, form select, form textarea, form button');
     createAdForm.classList.remove('ad-form--disabled');
-    mapBlock.classList.remove('map--faded');
-    document.querySelectorAll('form input, form select, form textarea, form button')
-    .forEach(function (elem) {
+    formElements.forEach(function (elem) {
       elem.removeAttribute('disabled', 'disabled');
     });
   };
+
+  var disabledForm = function () {
+    var formElements = document.querySelectorAll('form input, form select, form textarea, form button');
+    createAdForm.classList.add('ad-form--disabled');
+    createAdForm.reset();
+    filterAdForm.reset();
+    window.form.setDefaultForm();
+
+    formElements.forEach(function (elem) {
+      elem.setAttribute('disabled', 'disabled');
+    });
+  };
+
+  var statusForm = function () {
+    if (createAdForm.classList.contains('ad-form--disabled')) {
+      activeForm();
+    } else {
+      disabledForm();
+    }
+  };
+
   var changeAddressInput = function () {
     var inputAddress = document.querySelector('#address');
     inputAddress.value = 'Y: ' + pinCreatAd.offsetLeft + ' X: ' + pinCreatAd.offsetLeft;
@@ -29,18 +48,20 @@
     var inputPriceAd = document.querySelector('#price');
     var selectTypeHouse = document.querySelector('#type');
     var value = selectTypeHouse.options[selectTypeHouse.selectedIndex].value;
-    inputPriceAd.setAttribute('min', window.data.houseMap[value].price);
-    inputPriceAd.setAttribute('placeholder', window.data.houseMap[value].price);
+    inputPriceAd.setAttribute('min', window.data.getHouseMap[value].price);
+    inputPriceAd.setAttribute('placeholder', window.data.getHouseMap[value].price);
   };
 
-  changeAddressInput();
-  changeValueSelectHouse();
+  var defaultForm = function () {
+    changeAddressInput();
+    changeValueSelectHouse();
+  };
 
   window.form = {
-    activeForm: activeForm,
-    changeAddressInput: changeAddressInput,
-    changeValueSelectHouse: changeValueSelectHouse
+    statusForm: statusForm,
+    setDefaultForm: defaultForm
   };
+
 })();
 
 (function () {
@@ -91,4 +112,33 @@
   };
 
   fieldSetTime.addEventListener('change', onInputTimeChange);
+
+})();
+
+(function () {
+  var selectApartment = document.querySelector('#room_number');
+  var selectApartmentValue = selectApartment.options[selectApartment.selectedIndex].value;
+
+  var disabledSelectValues = function (element) {
+    var selectCapacity = document.querySelector('#capacity');
+    var selectCapacityOptions = Array.apply(null, selectCapacity.options);
+    var optionUnBlock = window.data.getHouseApartments[element];
+    selectCapacityOptions.forEach(function (elem) {
+      elem.removeAttribute('selected');
+      if (optionUnBlock.indexOf(Number(elem.value)) !== -1) {
+        elem.disabled = false;
+        selectCapacity.selectedIndex = elem.index;
+      } else {
+        elem.disabled = true;
+      }
+    });
+  };
+  disabledSelectValues(selectApartmentValue);
+
+  var onSelectApartmentsChange = function () {
+    selectApartmentValue = selectApartment.options[selectApartment.selectedIndex].value;
+    disabledSelectValues(selectApartmentValue);
+  };
+
+  selectApartment.addEventListener('change', onSelectApartmentsChange);
 })();

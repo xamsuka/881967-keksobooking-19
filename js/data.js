@@ -37,6 +37,13 @@
     }
   };
 
+  var houseApartments = {
+    1: [1],
+    2: [1, 2],
+    3: [1, 2, 3],
+    100: [0]
+  };
+
   for (var i = 1; i < amountAd + 1; i++) {
     ad[i] = {
       author: {
@@ -66,7 +73,8 @@
 
   window.data = {
     generateAd: ad,
-    houseMap: houseMap
+    getHouseMap: houseMap,
+    getHouseApartments: houseApartments
   };
 
 })();

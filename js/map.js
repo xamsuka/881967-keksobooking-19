@@ -1,32 +1,31 @@
 'use strict';
 
 (function () {
-
   var mapPins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var fragmentPins = document.createDocumentFragment();
+  var form = document.querySelector('.ad-form');
+  var mapBlock = document.querySelector('.map');
+
   var onGenerateMap = function (ads) {
+    var fragmentPins = document.createDocumentFragment();
+
     for (var j = 1; j < ads.length; j++) {
-      fragmentPins.appendChild(createPin(ads[j]));
+      if (ads[j].hasOwnProperty('offer')) {
+        fragmentPins.appendChild(createPin(ads[j]));
+      }
     }
     mapPins.appendChild(fragmentPins);
     window.card.renderCards(ads);
   };
 
-  var onError = function (errorMessage) {
-    var map = document.querySelector('.map');
-    var errorTemplate = document.querySelector('#error').content;
-    var error = errorTemplate.cloneNode(true);
-    var blockErrorMessage = error.querySelector('.error__message');
-    blockErrorMessage.textContent = errorMessage;
-    map.appendChild(error);
-    var buttonError = document.querySelector('.error__button');
+  var onSuccess = function () {
+    window.popup.openPopupModal();
+    window.map.disabledMap();
+  };
 
-    buttonError.addEventListener('click', function () {
-      var errorBlock = document.querySelector('.error');
-      errorBlock.remove();
-      activeMap();
-    });
+  var onError = function (errorMessage) {
+    window.map.disabledMap();
+    window.popup.openErrorModal(errorMessage);
   };
 
   var createPin = function (pinAd) {
@@ -40,10 +39,29 @@
 
   var activeMap = function () {
     window.backend.loadAds(onGenerateMap, onError);
-    window.form.activeForm();
+    mapBlock.classList.remove('map--faded');
+    window.form.statusForm();
   };
+
+  var disabledMap = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    pins.forEach(function (pin) {
+      pin.remove();
+    });
+    window.pin.setDefaultPosition();
+    window.form.statusForm();
+    mapBlock.classList.add('map--faded');
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.uploadAd(new FormData(form), onSuccess, onError);
+    evt.preventDefault();
+  });
 
   window.map = {
     activeMap: activeMap,
+    disabledMap: disabledMap
   };
+
+
 })();
