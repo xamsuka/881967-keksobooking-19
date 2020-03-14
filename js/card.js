@@ -66,6 +66,8 @@
     var pinActive = document.querySelector('.map__pin--active');
     if (popupModal) {
       popupModal.remove();
+    }
+    if (pinActive) {
       pinActive.classList.remove('map__pin--active');
     }
     document.removeEventListener('keydown', onCardEscPress);
@@ -75,15 +77,16 @@
     var popupButtonClose = card.querySelector('.popup__close');
     popupButtonClose.addEventListener('click', function () {
       var pinActive = document.querySelector('.map__pin--active');
-      pinActive.classList.remove('map__pin--active');
       closeCard();
     });
   };
 
   var renderCard = function (pinAd) {
+    var pinActive = document.querySelector('.map__pin--active');
     var popupModal = document.querySelector('.map__card');
     if (popupModal) {
       popupModal.remove();
+      pinActive.classList.remove('map__pin--active');
     }
     var card = createCard(pinAd);
     mountedCard(card);
@@ -95,7 +98,7 @@
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin, index) {
       pin.addEventListener('click', function () {
-        renderCard(ads[index + 1]);
+        renderCard(ads[index]);
         pin.classList.add('map__pin--active');
       });
     });
@@ -104,6 +107,7 @@
   window.card = {
     createCard: createCard,
     renderCards: renderCards,
+    closeCard: closeCard
   };
 
 })();
