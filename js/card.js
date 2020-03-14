@@ -1,14 +1,6 @@
 'use strict';
 
 (function () {
-
-  var houseTypes = {
-    palace: 'Дворец',
-    flat: 'Квартира',
-    house: 'Дом',
-    bungalo: 'Бунгало'
-  };
-
   var fragmentCard = document.createDocumentFragment();
   var template = document.querySelector('#card').content.querySelector('.map__card');
   var infoAdPopup = template.cloneNode(true);
@@ -99,7 +91,7 @@
     document.addEventListener('keydown', onCardEscPress);
   };
 
-  var renderCards = function () {
+  var renderCards = function (ads) {
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin, index) {
       pin.addEventListener('click', function () {
@@ -111,7 +103,7 @@
 
   window.card = {
     createCard: createCard,
-    renderCards: renderCards
+    renderCards: renderCards,
   };
 
 })();

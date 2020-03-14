@@ -72,13 +72,9 @@
   }
 
   window.data = {
-<<<<<<< HEAD
-    generateAd: ad
-=======
     generateAd: ad,
     getHouseMap: houseMap,
     getHouseApartments: houseApartments
->>>>>>> d2daab0dbe6f1274f02bfd9385bf13ab2ed5eb7c
   };
 
 })();

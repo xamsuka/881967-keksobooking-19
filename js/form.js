@@ -94,22 +94,7 @@
     }
   });
 
-  selectTypeHouse.addEventListener('change', function () {
-    var value = selectTypeHouse.options[selectTypeHouse.selectedIndex].value;
-    if (value === 'bungalo') {
-      inputPriceAd.setAttribute('min', '0');
-      inputPriceAd.setAttribute('placeholder', '0');
-    } else if (value === 'flat') {
-      inputPriceAd.setAttribute('min', '1000');
-      inputPriceAd.setAttribute('placeholder', '1000');
-    } else if (value === 'house') {
-      inputPriceAd.setAttribute('min', '5000');
-      inputPriceAd.setAttribute('placeholder', '5000');
-    } else {
-      inputPriceAd.setAttribute('min', '10000');
-      inputPriceAd.setAttribute('placeholder', '10000');
-    }
-  });
+  selectTypeHouse.addEventListener('change', window.form.changeValueSelectHouse);
 
   var fieldSetTime = document.querySelector('.ad-form__element--time');
 
