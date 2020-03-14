@@ -53,7 +53,7 @@
     popupAdTitle.textContent = pinAd.offer.title;
     popupAdAdress.textContent = pinAd.offer.address;
     popupAdPrice.textContent = pinAd.offer.price + ' ₽/ночь';
-    popupAdType.textContent = houseTypes[pinAd.offer.type];
+    popupAdType.textContent = window.data.getHouseMap[pinAd.offer.type].label;
     popupAdCapacity.textContent = pinAd.offer.rooms + ' комнаты для ' + pinAd.offer.guests + ' гостей';
     popupAdCheckin.textContent = 'Заезд после ' + pinAd.offer.checkin + ', выезд до ' + pinAd.offer.checkout;
 
@@ -71,8 +71,10 @@
 
   var closeCard = function () {
     var popupModal = document.querySelector('.map__card');
+    var pinActive = document.querySelector('.map__pin--active');
     if (popupModal) {
       popupModal.remove();
+      pinActive.classList.remove('map__pin--active');
     }
     document.removeEventListener('keydown', onCardEscPress);
   };
@@ -80,6 +82,8 @@
   var mountedCard = function (card) {
     var popupButtonClose = card.querySelector('.popup__close');
     popupButtonClose.addEventListener('click', function () {
+      var pinActive = document.querySelector('.map__pin--active');
+      pinActive.classList.remove('map__pin--active');
       closeCard();
     });
   };
@@ -99,7 +103,8 @@
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin, index) {
       pin.addEventListener('click', function () {
-        renderCard(window.data.generateAd[index + 1]);
+        renderCard(ads[index + 1]);
+        pin.classList.add('map__pin--active');
       });
     });
   };
