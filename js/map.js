@@ -13,7 +13,7 @@
     var fragmentPins = document.createDocumentFragment();
 
     for (var j = 0; j < ads.length; j++) {
-      if (ads[j].hasOwnProperty('offer')) {
+      if (ads[j].hasOwnProperty('offer') && j < MAX_PINS) {
         fragmentPins.appendChild(createPin(ads[j]));
       }
     }
@@ -27,28 +27,17 @@
       pin.remove();
       window.card.closeCard();
     });
-  }
+  };
 
   var filterHouses = function (option, filterAds) {
     if (option.value !== 'any') {
       var adFilterHouseTypes = filterAds.filter(function (ad) {
-        return ad.offer.type == option.value;
+        return ad.offer.type === option.value;
       });
     } else {
       return filterAds;
     }
     return adFilterHouseTypes;
-  };
-
-  var filterGuests = function (option, filterAds) {
-    if (option.value !== 'any') {
-      var adFilterHouseGuests = filterAds.filter(function (ad) {
-        return ad.offer.guests == option.value;
-      });
-    } else {
-      return filterAds;
-    }
-    return adFilterHouseGuests;
   };
 
   var filterPrices = function (option, filterAds) {
@@ -58,7 +47,6 @@
     switch (option) {
       case 'any':
         return filterAds;
-        break;
       case 'middle':
         adFilterHousePrice = filterAds.filter(function (ad) {
           return (ad.offer.price >= MIDDLE_PRICE_START && ad.offer.price <= MIDDLE_PRICE_END);
@@ -75,7 +63,7 @@
         });
         break;
       default:
-        console.log('Произошла ошибка при фильтрации. Параметр ' + option + 'неизвестен');
+        return filterAds;
     }
 
     return adFilterHousePrice;
@@ -85,13 +73,23 @@
     if (option.value !== 'any') {
       var adFilterHouseRooms = filterAds.filter(function (ad) {
 
-        return ad.offer.rooms == option.value;
+        return ad.offer.rooms === Number(option.value);
       });
     } else {
       return filterAds;
     }
-
     return adFilterHouseRooms;
+  };
+
+  var filterGuests = function (option, filterAds) {
+    if (option.value !== 'any') {
+      var adFilterHouseGuests = filterAds.filter(function (ad) {
+        return ad.offer.guests === Number(option.value);
+      });
+    } else {
+      return filterAds;
+    }
+    return adFilterHouseGuests;
   };
 
   var filterFeatures = function (filterAds, features) {
@@ -99,25 +97,28 @@
     features.forEach(function (feature) {
       adFilterHouseFeatures = adFilterHouseFeatures.filter(function (ad) {
         return ad.offer.features.includes(feature);
-      })
+      });
     });
     return adFilterHouseFeatures;
   };
 
-  var onFilterPins = function (evt) {
+  var onFilterPins = function () {
     var houseType = document.querySelector('#housing-type');
-    var housePriceValue = document.querySelector('#housing-price').value;
-    var houseRoomsValue = document.querySelector('#housing-rooms');
-    var houseGuestsValue = document.querySelector('#housing-guests');
+    var housePrice = document.querySelector('#housing-price');
+    var houseRooms = document.querySelector('#housing-rooms');
+    var houseGuests = document.querySelector('#housing-guests');
     var houseFeatures = document.querySelectorAll('input[type="checkbox"]:checked');
-    var featureValues = Array.from(houseFeatures).map(cb => cb.value);
+    var featureValues = Array.from(houseFeatures).map(function (el) {
+      return el.value;
+    });
+
     deleteAds();
     var filterAds = window.map.getAds;
     var house = filterHouses(houseType, filterAds);
-    var price = filterPrices(housePriceValue, house);
-    var rooms = filterRooms(houseRoomsValue, price);
-    var guests = filterGuests(houseGuestsValue, rooms);
-    var features = filterFeatures(guests, featureValues)
+    var price = filterPrices(housePrice.value, house);
+    var rooms = filterRooms(houseRooms, price);
+    var guests = filterGuests(houseGuests, rooms);
+    var features = filterFeatures(guests, featureValues);
     onGenerateMap(features);
   };
 
@@ -128,7 +129,7 @@
     onGenerateMap(ads);
 
     window.map.getAds = ads;
-  }
+  };
 
   var onSuccessUpload = function () {
     window.popup.openPopupModal();

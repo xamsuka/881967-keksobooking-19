@@ -77,7 +77,6 @@
   var mountedCard = function (card) {
     var popupButtonClose = card.querySelector('.popup__close');
     popupButtonClose.addEventListener('click', function () {
-      var pinActive = document.querySelector('.map__pin--active');
       closeCard();
     });
   };
