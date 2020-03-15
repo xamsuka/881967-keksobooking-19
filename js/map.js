@@ -111,32 +111,14 @@
     var houseGuestsValue = document.querySelector('#housing-guests');
     var houseFeatures = document.querySelectorAll('input[type="checkbox"]:checked');
     var featureValues = Array.from(houseFeatures).map(cb => cb.value);
-    // var target = evt.target;
     deleteAds();
-    var filterAds = window.map.getAds;  // изначальный массив.
-
-    // var filterAds = filterPrices(housePriceValue, window.map.getFilgterAds);
-
-    // filterPrices(target.value, window.map.getFilgterAds);
-
+    var filterAds = window.map.getAds;
     var house = filterHouses(houseType, filterAds);
     var price = filterPrices(housePriceValue, house);
     var rooms = filterRooms(houseRoomsValue, price);
     var guests = filterGuests(houseGuestsValue, rooms);
     var features = filterFeatures(guests, featureValues)
     onGenerateMap(features);
-
-    // switch (target.name) {
-    //   case 'housing-type':
-    //     filterAds = filterHouses(target);
-    //     onGenerateMap(filterAds);
-    //     break;
-    //   case 'housing-price':
-    //     filterPrices(target.value, filterAds);
-    //     break;
-    //   default:
-    //   onGenerateMap(window.map.getAds);
-    // }
   };
 
   formFilter.addEventListener('change', onFilterPins);
