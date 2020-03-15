@@ -17,10 +17,10 @@
   var mapPins = document.querySelector('.map__pins');
 
   var renderFeatures = function (pin, features) {
-   var blockFeatures = infoAdPopup.querySelector('.popup__features');
-   var fragmentFeatures = document.createDocumentFragment();
+    var blockFeatures = infoAdPopup.querySelector('.popup__features');
+    var fragmentFeatures = document.createDocumentFragment();
     pin.offer.features.forEach(function (pinFeature) {
-      features.forEach(function(cardFeature) {
+      features.forEach(function (cardFeature) {
         if (cardFeature.classList.contains('popup__feature--' + pinFeature)) {
           fragmentFeatures.appendChild(cardFeature);
         }

@@ -95,15 +95,13 @@
   };
 
   var filterFeatures = function (filterAds, features) {
-    var adFilterFeatures = [];
-    var adFilterHouseFeatures = filterAds.filter(function (ad) {
-      features.forEach(function (featur) {
-        if (ad.offer.features.includes(featur)) {
-          adFilterFeatures.push(ad);
-        };
-      });
+    var adFilterHouseFeatures = filterAds;
+    features.forEach(function (feature) {
+      adFilterHouseFeatures = adFilterHouseFeatures.filter(function (ad) {
+        return ad.offer.features.includes(feature);
+      })
     });
-    return adFilterFeatures;
+    return adFilterHouseFeatures;
   };
 
   var onFilterPins = function (evt) {
