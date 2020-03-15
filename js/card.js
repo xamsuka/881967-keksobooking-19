@@ -2,8 +2,9 @@
 
 (function () {
   var fragmentCard = document.createDocumentFragment();
-  var template = document.querySelector('#card').content.querySelector('.map__card');
-  var infoAdPopup = template.cloneNode(true);
+  var templateCard = document.querySelector('#card').content.querySelector('.map__card');
+  var infoAdPopup = templateCard.cloneNode(true);
+  var cardAdFeatures = Array.from(infoAdPopup.querySelector('.popup__features').children);
   var popupAdAvatar = infoAdPopup.querySelector('.popup__avatar');
   var popupAdTitle = infoAdPopup.querySelector('.popup__title');
   var popupAdAdress = infoAdPopup.querySelector('.popup__text--address');
@@ -15,18 +16,18 @@
   var popupAdPhotos = infoAdPopup.querySelector('.popup__photos');
   var mapPins = document.querySelector('.map__pins');
 
-  var renderFeatures = function (pin, pinFeatures) {
-    var popupAdFeatures = pinFeatures.querySelector('.popup__features').children;
-    for (var i = 0; i < popupAdFeatures.length; i++) {
-      var featreElement = popupAdFeatures[i];
-      for (var k = 0; k < pin.offer.features.length; k++) {
-        var features = pin.offer.features[k];
-
-        if (featreElement.classList.contains('popup__feature--' + features)) {
-          featreElement.style.display = 'none';
+  var renderFeatures = function (pin, features) {
+   var blockFeatures = infoAdPopup.querySelector('.popup__features');
+   var fragmentFeatures = document.createDocumentFragment();
+    pin.offer.features.forEach(function (pinFeature) {
+      features.forEach(function(cardFeature) {
+        if (cardFeature.classList.contains('popup__feature--' + pinFeature)) {
+          fragmentFeatures.appendChild(cardFeature);
         }
-      }
-    }
+      });
+    });
+    blockFeatures.innerHTML = '';
+    blockFeatures.appendChild(fragmentFeatures);
   };
 
   var renderAdPhoto = function (pinAd) {
@@ -49,7 +50,7 @@
     popupAdCapacity.textContent = pinAd.offer.rooms + ' комнаты для ' + pinAd.offer.guests + ' гостей';
     popupAdCheckin.textContent = 'Заезд после ' + pinAd.offer.checkin + ', выезд до ' + pinAd.offer.checkout;
 
-    renderFeatures(pinAd, infoAdPopup);
+    renderFeatures(pinAd, cardAdFeatures);
     popupAdDescription.textContent = pinAd.offer.description;
     popupAdPhotos.innerHTML = '';
     popupAdPhotos.appendChild(renderAdPhoto(pinAd));

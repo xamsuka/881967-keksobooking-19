@@ -24,20 +24,31 @@
   var deleteAds = function () {
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin) {
-        pin.remove();
-        window.card.closeCard();
+      pin.remove();
+      window.card.closeCard();
     });
   }
 
-  var filterHouses = function (options, filterAds) {
-    var adFilterHouseTypes = window.map.getFilgterAds.filter(function (ad) {
-      if (options.value !== 'any') {
-        return ad.offer.type === options.value;
-      } else {
-        return ad;
-      }
-    });
+  var filterHouses = function (option, filterAds) {
+    if (option.value !== 'any') {
+      var adFilterHouseTypes = filterAds.filter(function (ad) {
+        return ad.offer.type == option.value;
+      });
+    } else {
+      return filterAds;
+    }
     return adFilterHouseTypes;
+  };
+
+  var filterGuests = function (option, filterAds) {
+    if (option.value !== 'any') {
+      var adFilterHouseGuests = filterAds.filter(function (ad) {
+        return ad.offer.guests == option.value;
+      });
+    } else {
+      return filterAds;
+    }
+    return adFilterHouseGuests;
   };
 
   var filterPrices = function (option, filterAds) {
@@ -46,26 +57,22 @@
     var adFilterHousePrice;
     switch (option) {
       case 'any':
-        return window.map.getAds;
-        // onGenerateMap(filterAds);
+        return filterAds;
         break;
       case 'middle':
         adFilterHousePrice = filterAds.filter(function (ad) {
           return (ad.offer.price >= MIDDLE_PRICE_START && ad.offer.price <= MIDDLE_PRICE_END);
         });
-        // onGenerateMap(adFilterHousePrice);
         break;
       case 'low':
         adFilterHousePrice = filterAds.filter(function (ad) {
           return (ad.offer.price < MIDDLE_PRICE_START);
         });
-        // onGenerateMap(adFilterHousePrice);
         break;
       case 'high':
         adFilterHousePrice = filterAds.filter(function (ad) {
           return (ad.offer.price >= MIDDLE_PRICE_END);
         });
-        // onGenerateMap(adFilterHousePrice);
         break;
       default:
         console.log('Произошла ошибка при фильтрации. Параметр ' + option + 'неизвестен');
@@ -74,26 +81,52 @@
     return adFilterHousePrice;
   };
 
+  var filterRooms = function (option, filterAds) {
+    if (option.value !== 'any') {
+      var adFilterHouseRooms = filterAds.filter(function (ad) {
+
+        return ad.offer.rooms == option.value;
+      });
+    } else {
+      return filterAds;
+    }
+
+    return adFilterHouseRooms;
+  };
+
+  var filterFeatures = function (filterAds, features) {
+    var adFilterFeatures = [];
+    var adFilterHouseFeatures = filterAds.filter(function (ad) {
+      features.forEach(function (featur) {
+        if (ad.offer.features.includes(featur)) {
+          adFilterFeatures.push(ad);
+        };
+      });
+    });
+    return adFilterFeatures;
+  };
+
   var onFilterPins = function (evt) {
-    var houseTypeValue = document.querySelector('#housing-type').value;
+    var houseType = document.querySelector('#housing-type');
     var housePriceValue = document.querySelector('#housing-price').value;
-    var houseRoomsValue = document.querySelector('#housing-rooms').value;
-    var houseGuestsValue = document.querySelector('#housing-guests').value;
+    var houseRoomsValue = document.querySelector('#housing-rooms');
+    var houseGuestsValue = document.querySelector('#housing-guests');
     var houseFeatures = document.querySelectorAll('input[type="checkbox"]:checked');
-    var target = evt.target;
+    var featureValues = Array.from(houseFeatures).map(cb => cb.value);
+    // var target = evt.target;
     deleteAds();
-    var filterAds = filterPrices(housePriceValue, window.map.getFilgterAds);
+    var filterAds = window.map.getAds;  // изначальный массив.
+
+    // var filterAds = filterPrices(housePriceValue, window.map.getFilgterAds);
 
     // filterPrices(target.value, window.map.getFilgterAds);
 
-    var adFilterAds = filterAds.filter(function (ad) {
-      if (target.value !== 'any') {
-        return ad.offer.type === houseTypeValue;
-      } else {
-        return ad;
-      }
-    });
-    onGenerateMap(adFilterAds);
+    var house = filterHouses(houseType, filterAds);
+    var price = filterPrices(housePriceValue, house);
+    var rooms = filterRooms(houseRoomsValue, price);
+    var guests = filterGuests(houseGuestsValue, rooms);
+    var features = filterFeatures(guests, featureValues)
+    onGenerateMap(features);
 
     // switch (target.name) {
     //   case 'housing-type':
@@ -115,7 +148,6 @@
     onGenerateMap(ads);
 
     window.map.getAds = ads;
-    window.map.getFilgterAds = ads;
   }
 
   var onSuccessUpload = function () {
