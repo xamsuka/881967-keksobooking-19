@@ -22,6 +22,7 @@
 
   var disabledForm = function () {
     var formElements = document.querySelectorAll('form input, form select, form textarea, form button');
+    window.card.closeCard();
     createAdForm.reset();
     filterAdForm.reset();
     setDefaultForm();
@@ -62,6 +63,7 @@
 
   window.form = {
     activatedForm: activeForm,
+    disabledForm: disabledForm,
     updateStatusForm: updateStatusForm,
     setDefaultForm: setDefaultForm
   };

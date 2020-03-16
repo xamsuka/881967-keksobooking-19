@@ -159,8 +159,7 @@
     pins.forEach(function (pin) {
       pin.remove();
     });
-    window.pin.setDefaultPosition();
-    window.form.updateStatusForm();
+    window.form.disabledForm();
     mapBlock.classList.add('map--faded');
   };
 
