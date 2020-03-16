@@ -1,9 +1,11 @@
 'use strict';
 
 (function () {
-  var pinCreatAd = document.querySelector('.map__pin--main');
+  var PIN_POS_Y = 375;
+  var PIN_POS_X = 570;
   var createAdForm = document.querySelector('.ad-form');
   var filterAdForm = document.querySelector('.map__filters');
+  var selectTypeHouse = document.querySelector('#type');
 
   document.querySelectorAll('form input, form select, form textarea, form button')
     .forEach(function (elem) {
@@ -11,7 +13,6 @@
     });
 
   var activeForm = function () {
-    defaultForm();
     var formElements = document.querySelectorAll('form input, form select, form textarea, form button');
     createAdForm.classList.remove('ad-form--disabled');
     formElements.forEach(function (elem) {
@@ -21,17 +22,17 @@
 
   var disabledForm = function () {
     var formElements = document.querySelectorAll('form input, form select, form textarea, form button');
-    createAdForm.classList.add('ad-form--disabled');
     createAdForm.reset();
     filterAdForm.reset();
-    window.form.setDefaultForm();
+    setDefaultForm();
+    createAdForm.classList.add('ad-form--disabled');
 
     formElements.forEach(function (elem) {
       elem.setAttribute('disabled', 'disabled');
     });
   };
 
-  var statusForm = function () {
+  var updateStatusForm = function () {
     if (createAdForm.classList.contains('ad-form--disabled')) {
       activeForm();
     } else {
@@ -41,25 +42,28 @@
 
   var changeAddressInput = function () {
     var inputAddress = document.querySelector('#address');
-    inputAddress.value = 'Y: ' + pinCreatAd.offsetLeft + ' X: ' + pinCreatAd.offsetLeft;
+    inputAddress.value = 'Y: ' + PIN_POS_Y + ' X: ' + PIN_POS_X;
   };
 
   var changeValueSelectHouse = function () {
     var inputPriceAd = document.querySelector('#price');
-    var selectTypeHouse = document.querySelector('#type');
     var value = selectTypeHouse.options[selectTypeHouse.selectedIndex].value;
     inputPriceAd.setAttribute('min', window.data.getHouseMap[value].price);
     inputPriceAd.setAttribute('placeholder', window.data.getHouseMap[value].price);
   };
 
-  var defaultForm = function () {
+  var setDefaultForm = function () {
     changeAddressInput();
     changeValueSelectHouse();
   };
 
+  setDefaultForm();
+  selectTypeHouse.addEventListener('change', changeValueSelectHouse);
+
   window.form = {
-    statusForm: statusForm,
-    setDefaultForm: defaultForm
+    activatedForm: activeForm,
+    updateStatusForm: updateStatusForm,
+    setDefaultForm: setDefaultForm
   };
 
 })();
@@ -67,7 +71,6 @@
 (function () {
   var inputTitleAd = document.querySelector('#title');
   var inputPriceAd = document.querySelector('#price');
-  var selectTypeHouse = document.querySelector('#type');
 
   inputTitleAd.addEventListener('invalid', function () {
     if (inputTitleAd.validity.tooShort) {
@@ -93,8 +96,6 @@
       inputPriceAd.setCustomValidity('');
     }
   });
-
-  selectTypeHouse.addEventListener('change', window.form.changeValueSelectHouse);
 
   var fieldSetTime = document.querySelector('.ad-form__element--time');
 
@@ -141,4 +142,9 @@
   };
 
   selectApartment.addEventListener('change', onSelectApartmentsChange);
+})();
+
+(function () {
+  var buttonFormReset = document.querySelector('.ad-form__reset');
+  buttonFormReset.addEventListener('click', window.map.disabledMap);
 })();

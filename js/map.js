@@ -8,15 +8,14 @@
   var mapBlock = document.querySelector('.map');
   var formFilter = document.querySelector('.map__filters');
 
-
   var onGenerateMap = function (ads) {
     var fragmentPins = document.createDocumentFragment();
-
     for (var j = 0; j < ads.length; j++) {
       if (ads[j].hasOwnProperty('offer') && j < MAX_PINS) {
         fragmentPins.appendChild(createPin(ads[j]));
       }
     }
+    window.form.activatedForm();
     mapPins.appendChild(fragmentPins);
     window.card.renderCards(ads);
   };
@@ -153,7 +152,6 @@
   var activeMap = function () {
     window.backend.loadAds(onSuccessLoad, onError);
     mapBlock.classList.remove('map--faded');
-    window.form.statusForm();
   };
 
   var disabledMap = function () {
@@ -162,7 +160,7 @@
       pin.remove();
     });
     window.pin.setDefaultPosition();
-    window.form.statusForm();
+    window.form.updateStatusForm();
     mapBlock.classList.add('map--faded');
   };
 

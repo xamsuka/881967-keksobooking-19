@@ -21,6 +21,12 @@
     var successBlock = successTemplate.cloneNode(true);
     mainBlock.appendChild(successBlock);
     document.addEventListener('keydown', onPopupEscPress);
+    var popup = document.querySelector('.success');
+    document.addEventListener('mousedown', function (evt) {
+      if (evt.target.closest('.success__message') === null) {
+        popup.remove();
+      }
+    });
   };
 
   var openPopupError = function (errorMessage) {
@@ -35,8 +41,14 @@
       var errorBlock = document.querySelector('.error');
       errorBlock.remove();
     });
-
     document.addEventListener('keydown', onPopupEscPress);
+
+    var popup = document.querySelector('.error');
+    document.addEventListener('mousedown', function (evt) {
+      if (evt.target.closest('.error__message') === null) {
+        popup.remove();
+      }
+    });
   };
 
   window.popup = {
