@@ -121,7 +121,7 @@
     onGenerateMap(features);
   };
 
-  formFilter.addEventListener('change', onFilterPins);
+  formFilter.addEventListener('change', window.debounce(onFilterPins));
 
   var onSuccessLoad = function (data) {
     var ads = data;
