@@ -6,9 +6,9 @@
   var filterAdForm = document.querySelector('.map__filters');
 
   document.querySelectorAll('form input, form select, form textarea, form button')
-  .forEach(function (elem) {
-    elem.setAttribute('disabled', 'disabled');
-  });
+    .forEach(function (elem) {
+      elem.setAttribute('disabled', 'disabled');
+    });
 
   var activeForm = function () {
     defaultForm();
