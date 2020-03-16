@@ -15,6 +15,7 @@
         fragmentPins.appendChild(createPin(ads[j]));
       }
     }
+
     window.form.activatedForm();
     mapPins.appendChild(fragmentPins);
     window.card.renderCards(ads);
