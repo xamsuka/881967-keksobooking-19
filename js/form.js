@@ -6,47 +6,17 @@
   var createAdForm = document.querySelector('.ad-form');
   var filterAdForm = document.querySelector('.map__filters');
   var selectTypeHouse = document.querySelector('#type');
-
-  document.querySelectorAll('form input, form select, form textarea, form button')
-    .forEach(function (elem) {
-      elem.setAttribute('disabled', 'disabled');
-    });
-
-  var activeForm = function () {
-    var formElements = document.querySelectorAll('form input, form select, form textarea, form button');
-    createAdForm.classList.remove('ad-form--disabled');
-    formElements.forEach(function (elem) {
-      elem.removeAttribute('disabled', 'disabled');
-    });
-  };
-
-  var disabledForm = function () {
-    var formElements = document.querySelectorAll('form input, form select, form textarea, form button');
-    window.card.closeCard();
-    createAdForm.reset();
-    filterAdForm.reset();
-    setDefaultForm();
-    createAdForm.classList.add('ad-form--disabled');
-
-    formElements.forEach(function (elem) {
-      elem.setAttribute('disabled', 'disabled');
-    });
-  };
-
-  var updateStatusForm = function () {
-    if (createAdForm.classList.contains('ad-form--disabled')) {
-      activeForm();
-    } else {
-      disabledForm();
-    }
-  };
+  var formFilterBlock = document.querySelector('.map__filters');
+  var formFilterElements = formFilterBlock.querySelectorAll('form select, form input');
+  var formBlock = document.querySelector('.ad-form');
+  var formElements = formBlock.querySelectorAll('form input, form select, form textarea, form button');
 
   var changeAddressInput = function () {
     var inputAddress = document.querySelector('#address');
-    inputAddress.value = 'Y: ' + PIN_POS_Y + ' X: ' + PIN_POS_X;
+    inputAddress.value = '{{' + PIN_POS_X + '}}, ' + '{{' + PIN_POS_Y + '}}';
   };
 
-  var changeValueSelectHouse = function () {
+  var onSelectHouseChangeValue = function () {
     var inputPriceAd = document.querySelector('#price');
     var value = selectTypeHouse.options[selectTypeHouse.selectedIndex].value;
     inputPriceAd.setAttribute('min', window.data.getHouseMap[value].price);
@@ -55,17 +25,60 @@
 
   var setDefaultForm = function () {
     changeAddressInput();
-    changeValueSelectHouse();
+    onSelectHouseChangeValue();
   };
 
-  setDefaultForm();
-  selectTypeHouse.addEventListener('change', changeValueSelectHouse);
+  selectTypeHouse.addEventListener('change', onSelectHouseChangeValue);
+
+  var activateFilterForm = function () {
+    formFilterElements.forEach(function (elem) {
+      elem.disabled = false;
+    });
+  };
+
+  var disableFilterForm = function () {
+    formFilterElements.forEach(function (elem) {
+      elem.disabled = true;
+    });
+  };
+
+  var activateForm = function () {
+    createAdForm.classList.remove('ad-form--disabled');
+    formElements.forEach(function (elem) {
+      elem.disabled = false;
+    });
+  };
+
+  var disableForm = function () {
+    window.card.executeCloseCard();
+    window.pin.executeSetDefaultPosition();
+    createAdForm.reset();
+    filterAdForm.reset();
+    setDefaultForm();
+    createAdForm.classList.add('ad-form--disabled');
+    formElements.forEach(function (elem) {
+      elem.disabled = true;
+    });
+  };
+
+  disableForm();
+  disableFilterForm();
+
+  var updateStatusForm = function () {
+    if (createAdForm.classList.contains('ad-form--disabled')) {
+      activateForm();
+    } else {
+      disableForm();
+    }
+  };
 
   window.form = {
-    activatedForm: activeForm,
-    disabledForm: disabledForm,
-    updateStatusForm: updateStatusForm,
-    setDefaultForm: setDefaultForm
+    executeActivateFilterForm: activateFilterForm,
+    executeDisableFilterForm: disableFilterForm,
+    executeActivatedForm: activateForm,
+    executeDisableForm: disableForm,
+    executeUpdateStatusForm: updateStatusForm,
+    executeSetDefaultForm: setDefaultForm
   };
 
 })();
@@ -74,7 +87,8 @@
   var inputTitleAd = document.querySelector('#title');
   var inputPriceAd = document.querySelector('#price');
 
-  inputTitleAd.addEventListener('invalid', function () {
+  inputTitleAd.addEventListener('input', function () {
+    inputTitleAd.style.border = '2px solid #f92f08';
     if (inputTitleAd.validity.tooShort) {
       inputTitleAd.setCustomValidity('Минимальная длина заголовка — 30 символов');
     } else if (inputTitleAd.validity.toLong) {
@@ -83,11 +97,13 @@
       inputTitleAd.setCustomValidity('Обязательное текстовое поле');
     } else {
       inputTitleAd.setCustomValidity('');
+      inputTitleAd.style.border = '1px solid #d9d9d3';
     }
   });
 
-  inputPriceAd.addEventListener('invalid', function (evt) {
+  inputPriceAd.addEventListener('input', function (evt) {
     var target = evt.target;
+    inputPriceAd.style.border = '2px solid #f92f08';
     if (inputPriceAd.validity.rangeUnderflow) {
       inputPriceAd.setCustomValidity('Минимальная цена за выбранный тип жилья — ' + target.min);
     } else if (inputPriceAd.validity.rangeOverflow) {
@@ -96,6 +112,7 @@
       inputPriceAd.setCustomValidity('Обязательное поле');
     } else {
       inputPriceAd.setCustomValidity('');
+      inputPriceAd.style.border = '1px solid #d9d9d3';
     }
   });
 
@@ -122,12 +139,11 @@
   var selectApartment = document.querySelector('#room_number');
   var selectApartmentValue = selectApartment.options[selectApartment.selectedIndex].value;
 
-  var disabledSelectValues = function (element) {
+  var disableSelectValues = function () {
     var selectCapacity = document.querySelector('#capacity');
     var selectCapacityOptions = Array.apply(null, selectCapacity.options);
-    var optionUnBlock = window.data.getHouseApartments[element];
+    var optionUnBlock = window.data.getHouseApartments[selectApartmentValue];
     selectCapacityOptions.forEach(function (elem) {
-      elem.removeAttribute('selected');
       if (optionUnBlock.indexOf(Number(elem.value)) !== -1) {
         elem.disabled = false;
         selectCapacity.selectedIndex = elem.index;
@@ -136,17 +152,19 @@
       }
     });
   };
-  disabledSelectValues(selectApartmentValue);
+  disableSelectValues();
 
   var onSelectApartmentsChange = function () {
     selectApartmentValue = selectApartment.options[selectApartment.selectedIndex].value;
-    disabledSelectValues(selectApartmentValue);
+    disableSelectValues(selectApartmentValue);
   };
 
   selectApartment.addEventListener('change', onSelectApartmentsChange);
+
+  window.form.executeDisableSelectValues = disableSelectValues();
 })();
 
 (function () {
   var buttonFormReset = document.querySelector('.ad-form__reset');
-  buttonFormReset.addEventListener('click', window.map.disabledMap);
+  buttonFormReset.addEventListener('click', window.map.executeDisableMap);
 })();

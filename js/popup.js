@@ -7,14 +7,19 @@
     window.util.isEscPress(evt, closePopup);
   };
 
+  var onPopupOutClick = function (evt) {
+    window.util.isClickOut(evt, closePopup);
+  };
+
   var closePopup = function () {
     var popupModal = document.querySelector('.success, .error');
     if (popupModal) {
       popupModal.remove();
-      window.pin.setDefaultPosition();
+      window.pin.executeSetDefaultPosition();
     }
 
     document.removeEventListener('keydown', onPopupEscPress);
+    document.removeEventListener('mousedown', onPopupOutClick);
   };
 
   var openPopupSuccess = function () {
@@ -22,11 +27,7 @@
     var successBlock = successTemplate.cloneNode(true);
     mainBlock.appendChild(successBlock);
     document.addEventListener('keydown', onPopupEscPress);
-    document.addEventListener('mousedown', function (evt) {
-      if (evt.target.closest('.success__message') === null) {
-        closePopup();
-      }
-    });
+    document.addEventListener('mousedown', onPopupOutClick);
   };
 
   var openPopupError = function (errorMessage) {
@@ -50,7 +51,7 @@
   };
 
   window.popup = {
-    openPopupModal: openPopupSuccess,
-    openErrorModal: openPopupError
+    executeOpenPopupModal: openPopupSuccess,
+    executeOpenErrorModal: openPopupError
   };
 })();

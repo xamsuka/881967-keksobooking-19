@@ -18,16 +18,23 @@
 
   var renderFeatures = function (pin, features) {
     var blockFeatures = infoAdPopup.querySelector('.popup__features');
-    var fragmentFeatures = document.createDocumentFragment();
-    pin.offer.features.forEach(function (pinFeature) {
-      features.forEach(function (cardFeature) {
-        if (cardFeature.classList.contains('popup__feature--' + pinFeature)) {
-          fragmentFeatures.appendChild(cardFeature);
+    blockFeatures.innerHTML = '';
+    if (pin.offer.features.length > 0) {
+      blockFeatures.style.display = 'block';
+      var fragmentFeatures = document.createDocumentFragment();
+      pin.offer.features.forEach(function (pinFeature) {
+        for (var j = 0; j < features.length; j++) {
+          if (features[j].classList.contains('popup__feature--' + pinFeature)) {
+            fragmentFeatures.appendChild(features[j]);
+            break;
+          }
         }
       });
-    });
-    blockFeatures.innerHTML = '';
-    blockFeatures.appendChild(fragmentFeatures);
+      blockFeatures.appendChild(fragmentFeatures);
+    } else {
+      blockFeatures.style.display = 'none';
+      blockFeatures.innerHTML = '';
+    }
   };
 
   var renderAdPhoto = function (pinAd) {
@@ -74,7 +81,7 @@
     document.removeEventListener('keydown', onCardEscPress);
   };
 
-  var mountedCard = function (card) {
+  var mountingToCard = function (card) {
     var popupButtonClose = card.querySelector('.popup__close');
     popupButtonClose.addEventListener('click', function () {
       closeCard();
@@ -89,12 +96,12 @@
       pinActive.classList.remove('map__pin--active');
     }
     var card = createCard(pinAd);
-    mountedCard(card);
+    mountingToCard(card);
     mapPins.appendChild(card);
     document.addEventListener('keydown', onCardEscPress);
   };
 
-  var renderCards = function (ads) {
+  var startRenderCards = function (ads) {
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin, index) {
       pin.addEventListener('click', function () {
@@ -105,9 +112,9 @@
   };
 
   window.card = {
-    createCard: createCard,
-    renderCards: renderCards,
-    closeCard: closeCard
+    executeCreateCard: createCard,
+    executeRenderCards: startRenderCards,
+    executeCloseCard: closeCard
   };
 
 })();

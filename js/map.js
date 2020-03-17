@@ -2,30 +2,33 @@
 
 (function () {
   var MAX_PINS = 5;
+  var MIDDLE_PRICE_START = 10000;
+  var MIDDLE_PRICE_END = 50000;
   var mapPins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var form = document.querySelector('.ad-form');
   var mapBlock = document.querySelector('.map');
   var formFilter = document.querySelector('.map__filters');
 
-  var onGenerateMap = function (ads) {
+  var generateMap = function (ads) {
     var fragmentPins = document.createDocumentFragment();
     for (var j = 0; j < ads.length; j++) {
       if (ads[j].hasOwnProperty('offer') && j < MAX_PINS) {
         fragmentPins.appendChild(createPin(ads[j]));
+      } else {
+        break;
       }
     }
-
-    window.form.activatedForm();
     mapPins.appendChild(fragmentPins);
-    window.card.renderCards(ads);
+    window.card.executeRenderCards(ads);
+    window.form.executeActivateFilterForm();
   };
 
   var deleteAds = function () {
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin) {
       pin.remove();
-      window.card.closeCard();
+      window.card.executeCloseCard();
     });
   };
 
@@ -41,24 +44,22 @@
   };
 
   var filterPrices = function (option, filterAds) {
-    var MIDDLE_PRICE_START = 10000;
-    var MIDDLE_PRICE_END = 50000;
-    var adFilterHousePrice;
+    var adFilterHousePrices;
     switch (option) {
       case 'any':
         return filterAds;
       case 'middle':
-        adFilterHousePrice = filterAds.filter(function (ad) {
+        adFilterHousePrices = filterAds.filter(function (ad) {
           return (ad.offer.price >= MIDDLE_PRICE_START && ad.offer.price <= MIDDLE_PRICE_END);
         });
         break;
       case 'low':
-        adFilterHousePrice = filterAds.filter(function (ad) {
+        adFilterHousePrices = filterAds.filter(function (ad) {
           return (ad.offer.price < MIDDLE_PRICE_START);
         });
         break;
       case 'high':
-        adFilterHousePrice = filterAds.filter(function (ad) {
+        adFilterHousePrices = filterAds.filter(function (ad) {
           return (ad.offer.price >= MIDDLE_PRICE_END);
         });
         break;
@@ -66,7 +67,7 @@
         return filterAds;
     }
 
-    return adFilterHousePrice;
+    return adFilterHousePrices;
   };
 
   var filterRooms = function (option, filterAds) {
@@ -114,31 +115,31 @@
 
     deleteAds();
     var filterAds = window.map.getAds;
-    var house = filterHouses(houseType, filterAds);
-    var price = filterPrices(housePrice.value, house);
-    var rooms = filterRooms(houseRooms, price);
+    var houses = filterHouses(houseType, filterAds);
+    var prices = filterPrices(housePrice.value, houses);
+    var rooms = filterRooms(houseRooms, prices);
     var guests = filterGuests(houseGuests, rooms);
     var features = filterFeatures(guests, featureValues);
-    onGenerateMap(features);
+    generateMap(features);
   };
 
   formFilter.addEventListener('change', window.debounce(onFilterPins));
 
   var onSuccessLoad = function (data) {
     var ads = data;
-    onGenerateMap(ads);
+    generateMap(ads);
 
     window.map.getAds = ads;
   };
 
   var onSuccessUpload = function () {
-    window.popup.openPopupModal();
-    window.map.disabledMap();
+    window.popup.executeOpenPopupModal();
+    window.map.executeDisableMap();
   };
 
   var onError = function (errorMessage) {
-    window.map.disabledMap();
-    window.popup.openErrorModal(errorMessage);
+    window.map.executeDisableMap();
+    window.popup.executeOpenErrorModal(errorMessage);
   };
 
   var createPin = function (pinAd) {
@@ -150,17 +151,19 @@
     return pinElement;
   };
 
-  var activeMap = function () {
+  var activateMap = function () {
     window.backend.loadAds(onSuccessLoad, onError);
     mapBlock.classList.remove('map--faded');
+    window.form.executeActivatedForm();
   };
 
-  var disabledMap = function () {
+  var disableMap = function () {
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     pins.forEach(function (pin) {
       pin.remove();
     });
-    window.form.disabledForm();
+    window.form.executeDisableForm();
+    window.form.executeDisableFilterForm();
     mapBlock.classList.add('map--faded');
   };
 
@@ -170,9 +173,7 @@
   });
 
   window.map = {
-    activeMap: activeMap,
-    disabledMap: disabledMap
+    executeActivateMap: activateMap,
+    executeDisableMap: disableMap
   };
-
-
 })();

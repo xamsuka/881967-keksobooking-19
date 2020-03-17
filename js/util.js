@@ -16,12 +16,10 @@
         action();
       }
     },
-    randomElemet: function (arr) {
-      var randomElement = arr[Math.floor(Math.random() * arr.length)];
-      return randomElement;
+    isClickOut: function (evt, action) {
+      if (evt.target.closest('.success__message') === null) {
+        action();
+      }
     },
-    randomArbitary: function (min, max) {
-      return Math.floor(Math.random() * (max - min) + min);
-    }
   };
 })();

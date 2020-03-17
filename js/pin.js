@@ -5,10 +5,10 @@
   var HALF_PIN_MAIN_HEIGHT = 65;
   var START_PIN_POS_X = 570;
   var START_PIN_POS_Y = 375;
-  var startPosY = 130;
-  var endPosY = 630;
-  var startPosX = 0;
-  var endPosX = document.querySelector('.map').offsetWidth;
+  var START_POS_Y = 130;
+  var END_POS_Y = 630;
+  var START_POS_X = 0;
+  var END_POS_X = document.querySelector('.map').offsetWidth;
   var mapBlock = document.querySelector('.map');
   var pinCreatAd = document.querySelector('.map__pin--main');
 
@@ -20,7 +20,7 @@
   pinCreatAd.addEventListener('mousedown', function (evt) {
     var inputAddress = document.querySelector('#address');
     if (evt.which === 1 && mapBlock.classList.contains('map--faded')) {
-      window.map.activeMap();
+      window.map.executeActivateMap();
     }
 
     var startCoords = {
@@ -40,11 +40,11 @@
       };
       var coordY = pinCreatAd.offsetTop - shift.y;
       var coordX = pinCreatAd.offsetLeft - shift.x;
-      if ((coordY > startPosY - HALF_PIN_MAIN_HEIGHT && coordY < endPosY - HALF_PIN_MAIN_HEIGHT) && (coordX > startPosX - HALF_PIN_MAIN_WIDTH && coordX < endPosX - HALF_PIN_MAIN_WIDTH)) {
+      if ((coordY > START_POS_Y - HALF_PIN_MAIN_HEIGHT && coordY < END_POS_Y - HALF_PIN_MAIN_HEIGHT) && (coordX > START_POS_X - HALF_PIN_MAIN_WIDTH && coordX < END_POS_X - HALF_PIN_MAIN_WIDTH)) {
         pinCreatAd.style.top = coordY + 'px';
         pinCreatAd.style.left = coordX + 'px';
       }
-      inputAddress.value = 'Y: ' + (coordY + HALF_PIN_MAIN_HEIGHT) + ' X: ' + (coordX + HALF_PIN_MAIN_WIDTH);
+      inputAddress.value = '{{' + (coordX + HALF_PIN_MAIN_WIDTH) + '}}, ' + '{{' + (coordY + HALF_PIN_MAIN_HEIGHT) + '}} ';
     };
 
     var onMouseUp = function () {
@@ -56,14 +56,14 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  var onPinActiveMap = function (evt) {
+  var onPinEnterPress = function (evt) {
     window.util.isEnterPress(evt, window.map.activeMap);
   };
 
-  pinCreatAd.addEventListener('keydown', onPinActiveMap);
+  pinCreatAd.addEventListener('keydown', onPinEnterPress);
 
   window.pin = {
-    setDefaultPosition: setDefaultPosition
+    executeSetDefaultPosition: setDefaultPosition
   };
 
 })();
