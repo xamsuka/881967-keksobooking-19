@@ -32,75 +32,61 @@
     });
   };
 
-  var filterHouses = function (option, filterAds) {
+  var filterHouses = function (option, ad) {
     if (option.value !== 'any') {
-      var adFilterHouseTypes = filterAds.filter(function (ad) {
-        return ad.offer.type === option.value;
-      });
+        return ad.offer.type === option.value ? true : false;
     } else {
-      return filterAds;
+      return true;
     }
-    return adFilterHouseTypes;
   };
 
-  var filterPrices = function (option, filterAds) {
-    var adFilterHousePrices;
+  var filterPrices = function (option, ad) {
     switch (option) {
       case 'any':
-        return filterAds;
+        return true;
       case 'middle':
-        adFilterHousePrices = filterAds.filter(function (ad) {
-          return (ad.offer.price >= MIDDLE_PRICE_START && ad.offer.price <= MIDDLE_PRICE_END);
-        });
+          return (ad.offer.price >= MIDDLE_PRICE_START && ad.offer.price <= MIDDLE_PRICE_END) ? true : false;
         break;
       case 'low':
-        adFilterHousePrices = filterAds.filter(function (ad) {
-          return (ad.offer.price < MIDDLE_PRICE_START);
-        });
+          return (ad.offer.price < MIDDLE_PRICE_START) ? true : false;
         break;
       case 'high':
-        adFilterHousePrices = filterAds.filter(function (ad) {
-          return (ad.offer.price >= MIDDLE_PRICE_END);
-        });
+          return (ad.offer.price >= MIDDLE_PRICE_END) ? true: false;
         break;
       default:
-        return filterAds;
+        return false;
     }
-
-    return adFilterHousePrices;
   };
 
-  var filterRooms = function (option, filterAds) {
+  var filterRooms = function (option, ad) {
     if (option.value !== 'any') {
-      var adFilterHouseRooms = filterAds.filter(function (ad) {
-
-        return ad.offer.rooms === Number(option.value);
-      });
+        return ad.offer.rooms === Number(option.value) ? true : false;
     } else {
-      return filterAds;
+      return true;
     }
-    return adFilterHouseRooms;
   };
 
-  var filterGuests = function (option, filterAds) {
+  var filterGuests = function (option, ad) {
     if (option.value !== 'any') {
-      var adFilterHouseGuests = filterAds.filter(function (ad) {
-        return ad.offer.guests === Number(option.value);
-      });
+        return ad.offer.guests === Number(option.value) ? true : false;
     } else {
-      return filterAds;
+      return true;
     }
-    return adFilterHouseGuests;
   };
 
-  var filterFeatures = function (filterAds, features) {
-    var adFilterHouseFeatures = filterAds;
-    features.forEach(function (feature) {
-      adFilterHouseFeatures = adFilterHouseFeatures.filter(function (ad) {
-        return ad.offer.features.includes(feature);
-      });
-    });
-    return adFilterHouseFeatures;
+  var filterFeatures = function (ad, features) {
+    var isAvailable = true;
+    if (features.length > 0) {
+      features.forEach(function (feature) {
+        if (isAvailable) {
+          isAvailable = ad.offer.features.includes(feature);
+        }
+       });
+
+    } else {
+      isAvailable = true;
+    }
+    return isAvailable;
   };
 
   var onFilterPins = function () {
@@ -112,15 +98,16 @@
     var featureValues = Array.from(houseFeatures).map(function (el) {
       return el.value;
     });
-
     deleteAds();
-    var filterAds = window.map.getAds;
-    var houses = filterHouses(houseType, filterAds);
-    var prices = filterPrices(housePrice.value, houses);
-    var rooms = filterRooms(houseRooms, prices);
-    var guests = filterGuests(houseGuests, rooms);
-    var features = filterFeatures(guests, featureValues);
-    generateMap(features);
+    var ads = window.map.getAds;
+    var filterAds = [];
+    ads.forEach(function (ad) {
+      if (filterHouses(houseType, ad) && filterPrices(housePrice.value, ad) && filterRooms(houseRooms, ad) && filterGuests(houseGuests, ad) && filterFeatures(ad, featureValues)) {
+        filterAds.push(ad);
+      }
+    });
+
+    generateMap(filterAds);
   };
 
   formFilter.addEventListener('change', window.debounce(onFilterPins));
