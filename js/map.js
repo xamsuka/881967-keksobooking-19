@@ -86,7 +86,7 @@
     return isAvailable;
   };
 
-  var onFilterPins = function () {
+  var filterPins = function () {
     var houseType = document.querySelector('#housing-type');
     var housePrice = document.querySelector('#housing-price');
     var houseRooms = document.querySelector('#housing-rooms');
@@ -107,7 +107,7 @@
     generateMap(filterAds);
   };
 
-  formFilter.addEventListener('change', window.debounce(onFilterPins));
+  formFilter.addEventListener('change', window.debounce(filterPins));
 
   var onSuccessLoad = function (data) {
     var ads = data;
