@@ -34,7 +34,7 @@
 
   var filterHouses = function (option, ad) {
     if (option.value !== 'any') {
-        return ad.offer.type === option.value ? true : false;
+      return ad.offer.type === option.value ? true : false;
     } else {
       return true;
     }
@@ -45,14 +45,11 @@
       case 'any':
         return true;
       case 'middle':
-          return (ad.offer.price >= MIDDLE_PRICE_START && ad.offer.price <= MIDDLE_PRICE_END) ? true : false;
-        break;
+        return (ad.offer.price >= MIDDLE_PRICE_START && ad.offer.price <= MIDDLE_PRICE_END) ? true : false;
       case 'low':
-          return (ad.offer.price < MIDDLE_PRICE_START) ? true : false;
-        break;
+        return (ad.offer.price < MIDDLE_PRICE_START) ? true : false;
       case 'high':
-          return (ad.offer.price >= MIDDLE_PRICE_END) ? true: false;
-        break;
+        return (ad.offer.price >= MIDDLE_PRICE_END) ? true : false;
       default:
         return false;
     }
@@ -60,7 +57,7 @@
 
   var filterRooms = function (option, ad) {
     if (option.value !== 'any') {
-        return ad.offer.rooms === Number(option.value) ? true : false;
+      return ad.offer.rooms === Number(option.value) ? true : false;
     } else {
       return true;
     }
@@ -68,7 +65,7 @@
 
   var filterGuests = function (option, ad) {
     if (option.value !== 'any') {
-        return ad.offer.guests === Number(option.value) ? true : false;
+      return ad.offer.guests === Number(option.value) ? true : false;
     } else {
       return true;
     }
@@ -81,7 +78,7 @@
         if (isAvailable) {
           isAvailable = ad.offer.features.includes(feature);
         }
-       });
+      });
 
     } else {
       isAvailable = true;
