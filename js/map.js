@@ -92,17 +92,21 @@
     var houseRooms = document.querySelector('#housing-rooms');
     var houseGuests = document.querySelector('#housing-guests');
     var houseFeatures = document.querySelectorAll('input[type="checkbox"]:checked');
+    var ads = window.map.getAds;
+    var filterAds = [];
     var featureValues = Array.from(houseFeatures).map(function (el) {
       return el.value;
     });
     deleteAds();
-    var ads = window.map.getAds;
-    var filterAds = [];
-    ads.forEach(function (ad) {
-      if (filterHouses(houseType, ad) && filterPrices(housePrice.value, ad) && filterRooms(houseRooms, ad) && filterGuests(houseGuests, ad) && filterFeatures(ad, featureValues)) {
-        filterAds.push(ad);
+    for (var k = 0; k < ads.length; k++) {
+      if (filterAds.length < MAX_PINS) {
+        if (filterHouses(houseType, ads[k]) && filterPrices(housePrice.value, ads[k]) && filterRooms(houseRooms, ads[k]) && filterGuests(houseGuests, ads[k]) && filterFeatures(ads[k], featureValues)) {
+          filterAds.push(ads[k]);
+        }
+      } else {
+        break;
       }
-    });
+    }
 
     generateMap(filterAds);
   };

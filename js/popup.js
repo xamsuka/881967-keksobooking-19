@@ -43,11 +43,7 @@
       errorBlock.remove();
     });
     document.addEventListener('keydown', onPopupEscPress);
-    document.addEventListener('mousedown', function (evt) {
-      if (evt.target.closest('.error__message') === null) {
-        closePopup();
-      }
-    });
+    document.addEventListener('mousedown', onPopupOutClick);
   };
 
   window.popup = {
